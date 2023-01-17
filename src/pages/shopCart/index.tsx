@@ -5,11 +5,13 @@
  * @email: 376769757@qq.com
  * @Date: 2023-01-15 00:42:26
  * @LastEditors: ZhengXiaoRui
- * @LastEditTime: 2023-01-15 02:42:38
+ * @LastEditTime: 2023-01-17 00:54:55
  */
 import React from "react";
 import styles from "../shopCart/shopCart.module.css";
 import Image from "next/image";
+import { getUserFromReq } from "@/utils/utils.server";
+import { GetServerSideProps } from "next";
 export default function index() {
   return (
     <>
@@ -106,6 +108,7 @@ export default function index() {
           <div className={styles["jb_shopping_topb"]}>
             hi,欢迎您的到来！
             <a href="登录.html">登录</a> |<a href="注册/注册.html">注册</a> |
+            <a href="/api/user/logout">退出登录</a> |
             <a href="会员中心主页.html">会员中心</a> |<a href="">客服服务</a>
           </div>
         </div>
@@ -208,3 +211,22 @@ export default function index() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const user = await getUserFromReq(ctx.req);
+  if (!user) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
+    };
+  }
+  return {
+    props: {
+      user: {
+        name: user.USERNAME,
+      },
+    },
+  };
+};
