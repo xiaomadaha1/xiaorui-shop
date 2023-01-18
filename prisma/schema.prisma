@@ -8,9 +8,8 @@ datasource db {
 }
 
 model User {
-  USERNAME String  @id @unique
+  USERNAME String @id @unique
   PWD      String
-  TOKEN    String?
 }
 
 model Goods {

@@ -5,7 +5,7 @@
  * @email: 376769757@qq.com
  * @Date: 2023-01-16 13:52:21
  * @LastEditors: ZhengXiaoRui
- * @LastEditTime: 2023-01-16 23:36:54
+ * @LastEditTime: 2023-01-17 20:44:32
  */
 import nc from "next-connect";
 import * as Boom from "@hapi/boom";
@@ -22,7 +22,6 @@ export const apiHandler = () =>
   nc<NextApiRequest, NextApiResponse>({
     onError(err, req, res) {
       if (Boom.isBoom(err)) {
-        console.log(err);
         res.status(err.output.payload.statusCode);
         res.json({
           error: err.output.payload.error,
@@ -34,7 +33,6 @@ export const apiHandler = () =>
           message: "Unexpected error",
         });
         console.error(err);
-        // unexcepted error
       }
     },
   });

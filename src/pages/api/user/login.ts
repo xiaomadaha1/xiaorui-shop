@@ -1,3 +1,12 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: ZhengXiaoRui
+ * @email: 376769757@qq.com
+ * @Date: 2023-01-16 15:00:04
+ * @LastEditors: ZhengXiaoRui
+ * @LastEditTime: 2023-01-17 21:06:05
+ */
 // pages/api/login.tsx
 import Boom from "@hapi/boom";
 import { apiHandler, prisma } from "@/utils/utils.server";
@@ -6,7 +15,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import jwt, { Secret } from 'jsonwebtoken'
 import cookie from 'cookie'
 async function validate(username: string, password: string) {
-  // validate the username and password
   const user = await prisma.user.findUnique({
     where: {
       USERNAME: username,
