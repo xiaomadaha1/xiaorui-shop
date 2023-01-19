@@ -13,7 +13,24 @@ model User {
 }
 
 model Goods {
-  ID    String @id @unique
-  NAME  String
-  Price Float
+  id       String  @id @unique
+  name     String
+  price    Decimal
+  discount Float
+  img      String
+}
+
+model GoodDetail {
+  id       String  @id @unique
+  name     String
+  price    Decimal
+  discount Float
+  img      String //存放数组转json字符串
+  detail   String
+}
+
+model ShopCart {
+  id       String @id @unique
+  goodIds  String
+  username String
 }

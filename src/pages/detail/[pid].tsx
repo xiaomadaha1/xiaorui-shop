@@ -5,11 +5,28 @@
  * @email: 376769757@qq.com
  * @Date: 2023-01-15 01:14:12
  * @LastEditors: ZhengXiaoRui
- * @LastEditTime: 2023-01-15 03:08:16
+ * @LastEditTime: 2023-01-19 14:01:08
  */
+import { GetServerSideProps } from "next";
 import React from "react";
 import styles from "../detail/detail.module.css";
-export default function index() {
+import { useRouter } from "next/router";
+import axios from "axios";
+import { base_URL } from "@/config/api-config";
+import Link from "next/link";
+
+type GoodDetail = {
+  id: string;
+  name: string;
+  img: string;
+  price: number;
+  discount: number;
+  detail: string;
+};
+
+export default function Index(props: { data: GoodDetail }) {
+  const { data } = props;
+  console.log(data);
   return (
     <>
       <style global jsx>{`
@@ -251,20 +268,16 @@ export default function index() {
           </div>
           <div className={`${styles["lyh-spxq-t3"]}  ${styles["clear"]}`}>
             <div className={styles["lyh-spxq-t3_L"]}>
-              <img src="/images/lyh-spxq-2.jpg" alt="" />
+              <img src={data.img} alt="" width={500} height={400} />
               <div className={styles["lyh-spxq-t3_L_b"]}>
                 <span className={styles["lyh-spxq-t3_L_b1"]}></span>
-                <img src="/images/lyh-spxq-3.jpg" alt="" />
-                <img src="/images/lyh-spxq-3.jpg" alt="" />
-                <img src="/images/lyh-spxq-4.jpg" alt="" />
-                <img src="/images/lyh-spxq-5.jpg" alt="" />
-                <img src="/images/lyh-spxq-6.jpg" alt="" />
+                <img src={data.img} width={100} height={90} alt="" />
                 <span className={styles["lyh-spxq-t3_L_b2"]}></span>
               </div>
             </div>
             <div className={styles["lyh-spxq-t3_R"]}>
               <div className={styles["lyh-spxq-t3_R_1"]}>
-                <span>Dnaiel Wellington Belfast 玫瑰金尼龙带腕表(中性款)</span>
+                <span>{data.name}</span>
                 <span className={styles["lyh-spxq-t3_R_1_1"]}>新品</span>
               </div>
               <div className={styles["lyh-spxq-t3_R_2"]}></div>
@@ -279,10 +292,10 @@ export default function index() {
                           现价
                         </span>
                         <span className={styles["lyh-spxq-t3_R_3_L_Y"]}>
-                          ¥3,800
+                          ¥{(data.price * data.discount).toFixed(2)}
                         </span>
                         <span className={styles["lyh-spxq-t3_R_3_L_t"]}>
-                          ¥5,200
+                          ¥{data.price}
                         </span>
                       </div>
                       <div></div>
@@ -372,7 +385,9 @@ export default function index() {
                           className={styles["lyh-spxq-t3_R_3_L_x"]}
                         />
                         <span className={styles["lyh-spxq-t3_R_3_L_g"]}>
-                          <a href="shopCart.html">放入购物袋</a>
+                          <Link href={`/shopCart?addGoodId=${data.id}`}>
+                            放入购物袋
+                          </Link>
                         </span>
                         <span className={styles["lyh-spxq-t3_R_3_L_j"]}>
                           加入收藏
@@ -394,7 +409,7 @@ export default function index() {
                         </div>
                         <div className={styles["lyh-spxq-t3_R_3_L_3_tR"]}>
                           <div style={{ color: "rgb(239,0,24)" }}>
-                            世界杯VS食界杯(常温商品)满199元赠品四选一，在购物车中挑....
+                            {data.detail}
                           </div>
                           <div>
                             Grandma Wild's祖母燕麦饼150g(英国进口盒){" "}
@@ -1291,7 +1306,10 @@ export default function index() {
                 {` `}
                 {` `}
                 {` `}
-                <span className={styles["lyh-splb-c_R_3_4"]}> ¥3,800</span>
+                <span className={styles["lyh-splb-c_R_3_4"]}>
+                  {" "}
+                  ¥{(data.price * data.discount).toFixed(2)}
+                </span>
               </span>
               <div className={styles["lyh-splb-c_R_2_xian"]}></div>
               <img src="/images/lyh-spxq-39.jpg" alt="" />
@@ -1306,7 +1324,10 @@ export default function index() {
                 {` `}
                 {` `}
                 {` `}
-                <span className={styles["lyh-splb-c_R_3_4"]}> ¥3,800</span>
+                <span className={styles["lyh-splb-c_R_3_4"]}>
+                  {" "}
+                  ¥{(data.price * data.discount).toFixed(2)}
+                </span>
               </span>
               <div className={styles["lyh-splb-c_R_2_xian"]}></div>
               <img src="/images/lyh-spxq-40.jpg" alt="" />
@@ -1321,7 +1342,10 @@ export default function index() {
                 {` `}
                 {` `}
                 {` `}
-                <span className={styles["lyh-splb-c_R_3_4"]}> ¥3,800</span>
+                <span className={styles["lyh-splb-c_R_3_4"]}>
+                  {" "}
+                  ¥{(data.price * data.discount).toFixed(2)}
+                </span>
               </span>
               <div className={styles["lyh-splb-c_R_2_xian"]}></div>
               <img src="/images/lyh-spxq-41.jpg" alt="" />
@@ -1336,7 +1360,10 @@ export default function index() {
                 {` `}
                 {` `}
                 {` `}
-                <span className={styles["lyh-splb-c_R_3_4"]}> ¥3,800</span>
+                <span className={styles["lyh-splb-c_R_3_4"]}>
+                  {" "}
+                  ¥{(data.price * data.discount).toFixed(2)}
+                </span>
               </span>
               <div className={styles["lyh-splb-c_R_2_xian"]}></div>
               <img src="/images/lyh-spxq-42.jpg" alt="" />
@@ -1351,7 +1378,10 @@ export default function index() {
                 {` `}
                 {` `}
                 {` `}
-                <span className={styles["lyh-splb-c_R_3_4"]}> ¥3,800</span>
+                <span className={styles["lyh-splb-c_R_3_4"]}>
+                  {" "}
+                  ¥{(data.price * data.discount).toFixed(2)}
+                </span>
               </span>
               <div className={styles["lyh-splb-c_R_2_xian"]}></div>
             </div>
@@ -1449,3 +1479,17 @@ export default function index() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { pid } = ctx.query;
+  const goodDetail = await axios.post(`${base_URL}/api/good/detail`, {
+    id: pid,
+  });
+  if (!goodDetail.data || !goodDetail.data?.detail?.length)
+    return { props: {} };
+  return {
+    props: {
+      data: goodDetail.data.detail[0],
+    },
+  };
+};

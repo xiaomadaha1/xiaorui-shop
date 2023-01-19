@@ -1,3 +1,4 @@
+import { GetServerSideProps } from "next";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import {
@@ -13,7 +14,10 @@ import {
   L2Ft,
   L3Ft,
 } from "../utils/lyh";
-export default function Index() {
+export default function Index(props) {
+  const {
+    data: { list },
+  } = props;
   useEffect(() => {
     Lhead2();
     Lcent1();
@@ -8065,7 +8069,37 @@ export default function Index() {
                     className="lyh-cnt0_l_tfL1234"
                     name="lyh-cnt0_l_tfL2"
                   >
-                    <div className="lyh-cnt0_l_tf1" name="Lname">
+                    {list?.length &&
+                      list.map((good, index) => {
+                        return (
+                          <div
+                            className={`lyh-cnt0_l_tf${index + 1}`}
+                            name="Lname"
+                            key={index}
+                          >
+                            <img
+                              src={good.img}
+                              alt=""
+                              className="lyh-cnt0_l_tf1_tu"
+                              style={{ width: 180, height: 180 }}
+                            />
+                            <ul className="lyh-cnt0_l_tf1_jieshao">
+                              <li>
+                                <Link href={`/detail/${good.id}`}>
+                                  {good.name}
+                                </Link>
+                              </li>
+                              <li className="lyh-cnt0_l_tf1_shengyu0">
+                                {(good.price * good.discount).toFixed(2)}
+                              </li>
+                              <li className="lyh-cnt0_l_tf1_shengyu1">
+                                <span>{good.price}</span>仅剩191件
+                              </li>
+                            </ul>
+                          </div>
+                        );
+                      })}
+                    {/* <div className="lyh-cnt0_l_tf1" name="Lname">
                       <img
                         src="images/lyh-chanpin2.jpg"
                         alt=""
@@ -8126,7 +8160,7 @@ export default function Index() {
                           <span>¥1198.00</span>仅剩66件
                         </li>
                       </ul>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <div className="lyh-cnt0_l_tfR" name="lyh-cnt0_l_tfR"></div>
@@ -9528,3 +9562,13 @@ export default function Index() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const res = await fetch("http://localhost:3000/api/good/list");
+  const goodsList = await res.json();
+  return {
+    props: {
+      data: goodsList,
+    },
+  };
+};
