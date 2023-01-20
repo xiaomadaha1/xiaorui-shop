@@ -5,7 +5,7 @@
  * @email: 376769757@qq.com
  * @Date: 2023-01-15 00:42:26
  * @LastEditors: ZhengXiaoRui
- * @LastEditTime: 2023-01-19 17:32:00
+ * @LastEditTime: 2023-01-20 16:40:47
  */
 import React from "react";
 import styles from "../shopCart/shopCart.module.css";
@@ -254,6 +254,7 @@ export default function Index(props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  ctx.res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
   const user = await getUserFromReq(ctx.req);
   if (!user) {
     return {
