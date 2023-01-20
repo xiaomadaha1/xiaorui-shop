@@ -5,14 +5,18 @@
  * @email: 376769757@qq.com
  * @Date: 2023-01-15 00:42:26
  * @LastEditors: ZhengXiaoRui
- * @LastEditTime: 2023-01-17 00:54:55
+ * @LastEditTime: 2023-01-19 17:32:00
  */
 import React from "react";
 import styles from "../shopCart/shopCart.module.css";
 import Image from "next/image";
 import { getUserFromReq } from "@/utils/utils.server";
 import { GetServerSideProps } from "next";
-export default function index() {
+import { base_URL } from "@/config/api-config";
+import axios from "axios";
+export default function Index(props) {
+  const { detailList } = props;
+  console.log(props);
   return (
     <>
       <style global jsx>{`
@@ -137,7 +141,7 @@ export default function index() {
             <span className={styles["jb_sop_word_g"]}>操作</span>
           </div>
         </div>
-        <div className={styles["jb_sop_jst"]}>
+        {/* <div className={styles["jb_sop_jst"]}>
           <input className={styles["jb_sop_jsta"]} type="checkbox" />
           <img
             className={styles["jb_sop_jstb"]}
@@ -160,7 +164,44 @@ export default function index() {
           <span className={styles["jb_sop_jstge"]}>￥38.5</span>
           <p className={styles["jb_sop_jstgf"]}>收藏</p>
           <p className={styles["jb_sop_jstgg"]}>删除</p>
-        </div>
+        </div> */}
+        {detailList?.length &&
+          detailList.map((item) => {
+            return (
+              <div key={item.id}>
+                <div className={styles["jb_sop_jst"]}>
+                  <input className={styles["jb_sop_jsta"]} type="checkbox" />
+                  <img
+                    className={styles["jb_sop_jstb"]}
+                    src={item.img}
+                    height="67"
+                    width="41"
+                    alt=""
+                  />
+                  <span className={styles["jb_sop_jstc"]}>{item.name}</span>
+                  <p className={styles["jb_sop_jstd"]}>
+                    会员价：
+                    <span className={styles["jb_sop_jste"]}>
+                      ￥{(item.price * item.discount).toFixed(2)}
+                    </span>
+                  </p>
+                  <span className={styles["jb_sop_jstf"]}>---</span>
+                  <div className={styles["jb_sop_jstga"]}>
+                    <span className={styles["jb_sop_jstgb"]}>-</span>
+                    <span className={styles["jb_sop_jstgc"]}>1</span>
+                    <span className={styles["jb_sop_jstgb"]}>+</span>
+                  </div>
+                  <span className={styles["jb_sop_jstgd"]}>1</span>
+                  <span className={styles["jb_sop_jstge"]}>
+                    ￥{(item.price * item.discount).toFixed(2)}
+                  </span>
+                  <p className={styles["jb_sop_jstgf"]}>收藏</p>
+                  <p className={styles["jb_sop_jstgg"]}>删除</p>
+                </div>
+              </div>
+            );
+          })}
+
         <div className={styles["jb_all_qx"]}>
           <input className={styles["jb_all_qxa"]} type="checkbox" />
           <span className={styles["jb_all_qxb"]}>全选</span>
@@ -222,11 +263,32 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   }
+  const res = await axios.post(`${base_URL}/api/good/cart`, {
+    username: user.USERNAME,
+  });
+  const list = res.data.list;
+  const promises = [];
+  if (list?.length) {
+    list.forEach((element: { goodIds: any }) => {
+      promises.push(
+        axios.post(`${base_URL}/api/good/detail`, {
+          id: element.goodIds,
+        })
+      );
+    });
+  }
+  const detailList = [];
+  const detailData = await Promise.all(promises);
+  detailData.forEach((item, index) => {
+    detailList.push(item.data.detail[0]);
+  });
+
   return {
     props: {
       user: {
         name: user.USERNAME,
       },
+      detailList,
     },
   };
 };

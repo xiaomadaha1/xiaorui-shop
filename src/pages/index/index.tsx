@@ -1,3 +1,5 @@
+import SearchInput from "@/components/SearchInput";
+import axios from "axios";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import React, { useEffect } from "react";
@@ -6971,22 +6973,10 @@ export default function Index(props) {
       <div className="xst-search">
         <div className="xst-search-l">LOGO</div>
         <div className="xst-search-s">
-          <div className="xst-form-div">
-            <form action="" id="xst-form" className="xst-form">
-              <input
-                type="text"
-                value="关键词"
-                className="xst-form-t"
-                id="xst-form-t"
-              />
-              <input
-                type="button"
-                value="搜索"
-                className="xst-form-b"
-                id="xst-form-b"
-              />
-            </form>
-          </div>
+          <SearchInput
+            placeholder="关键词"
+            style={{ width: 375, border: "1px solid red", borderRadius: 6 }}
+          />
           <ul className="xst-hotsearch">
             <li>热门搜索：连衣裙</li>
             <li>|</li>

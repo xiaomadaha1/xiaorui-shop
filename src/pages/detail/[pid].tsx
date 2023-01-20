@@ -5,7 +5,7 @@
  * @email: 376769757@qq.com
  * @Date: 2023-01-15 01:14:12
  * @LastEditors: ZhengXiaoRui
- * @LastEditTime: 2023-01-19 14:01:08
+ * @LastEditTime: 2023-01-19 17:38:12
  */
 import { GetServerSideProps } from "next";
 import React from "react";
@@ -14,6 +14,8 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { base_URL } from "@/config/api-config";
 import Link from "next/link";
+import { addGoodsToCart } from "../services/good-services";
+import { getUserFromReq } from "@/utils/utils.server";
 
 type GoodDetail = {
   id: string;
@@ -24,9 +26,8 @@ type GoodDetail = {
   detail: string;
 };
 
-export default function Index(props: { data: GoodDetail }) {
-  const { data } = props;
-  console.log(data);
+export default function Index(props: { data: GoodDetail; user: any }) {
+  const { data, username } = props;
   return (
     <>
       <style global jsx>{`
@@ -385,9 +386,14 @@ export default function Index(props: { data: GoodDetail }) {
                           className={styles["lyh-spxq-t3_R_3_L_x"]}
                         />
                         <span className={styles["lyh-spxq-t3_R_3_L_g"]}>
-                          <Link href={`/shopCart?addGoodId=${data.id}`}>
+                          <a
+                            onClick={async () => {
+                              await addGoodsToCart(data.id, username);
+                              window.location.href = `/shopCart`;
+                            }}
+                          >
                             放入购物袋
-                          </Link>
+                          </a>
                         </span>
                         <span className={styles["lyh-spxq-t3_R_3_L_j"]}>
                           加入收藏
@@ -1481,6 +1487,15 @@ export default function Index(props: { data: GoodDetail }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const user = await getUserFromReq(ctx.req);
+  if (!user) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
+    };
+  }
   const { pid } = ctx.query;
   const goodDetail = await axios.post(`${base_URL}/api/good/detail`, {
     id: pid,
@@ -1489,6 +1504,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return { props: {} };
   return {
     props: {
+      username: user.USERNAME,
       data: goodDetail.data.detail[0],
     },
   };

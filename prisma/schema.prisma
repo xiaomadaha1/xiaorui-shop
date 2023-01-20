@@ -30,7 +30,7 @@ model GoodDetail {
 }
 
 model ShopCart {
-  id       String @id @unique
+  id       Int    @id @default(autoincrement())
   goodIds  String
   username String
 }
